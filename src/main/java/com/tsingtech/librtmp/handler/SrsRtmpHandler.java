@@ -1,12 +1,18 @@
 package com.tsingtech.librtmp.handler;
 
+import cn.hutool.core.io.FileUtil;
 import com.github.faucamp.simplertmp.packets.Command;
 import com.tsingtech.librtmp.RtmpClient;
+import com.tsingtech.librtmp.vo.DataPacket;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandler;
 import io.netty.channel.ChannelPromise;
 import io.netty.channel.SimpleChannelInboundHandler;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.SocketAddress;
 
@@ -113,6 +119,23 @@ int chunksize;
             System.out.println("handleRxInvoke(): onStatus " + code);
             if (code.equals("NetStream.Publish.Start")) {
                 rtmpClient.setInited();
+                /*try {
+                    Thread.sleep(20000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
+                /*DataPacket msg = new DataPacket();
+                File file = new File("/home/yue/Videos/test.webm");
+                FileReader fileReader = new FileReader(file);
+                byte[] by = FileUtil.readBytes(file);
+                ByteBuf buf = Unpooled.wrappedBuffer(by);
+                msg.setBody(buf);
+
+                try {
+                    rtmpClient.publish3(msg);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }*/
 //                data = readAllBytes(get("C:/Users/89438/Desktop/720p.h264.raw"));
 //                SrsFlvMuxer srsFlvMuxer = new SrsFlvMuxer(ctx, currentStreamId);
 //                for (;;) {
@@ -180,12 +203,14 @@ int chunksize;
 
     @Override
     public void disconnect(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+        System.out.println("流关闭");
         ctx.disconnect(promise);
     }
 
 
     @Override
     public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+        System.out.println("流关闭");
         ctx.close(promise);
     }
 

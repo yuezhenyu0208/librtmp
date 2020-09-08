@@ -1,5 +1,6 @@
 package com.tsingtech.librtmp.handler;
 
+import com.github.faucamp.simplertmp.packets.RtmpHeader;
 import com.github.faucamp.simplertmp.packets.Video;
 import com.tsingtech.librtmp.vo.DataPacket;
 import io.netty.buffer.ByteBuf;
@@ -86,6 +87,7 @@ public class SrsFlvMuxer2 {
         ReferenceCountUtil.release(flvTag);
         video.getHeader().setAbsoluteTimestamp((int) timestamp);
         video.getHeader().setMessageStreamId(1);
+        video.getHeader().setMessageType(RtmpHeader.MessageType.VIDEO);
         return video;
     }
 
@@ -140,8 +142,8 @@ public class SrsFlvMuxer2 {
 
         // h.264 raw data.
         muxSequenceHeader(fvlTag, sps, pps);
-//        System.out.println(String.format("flv: h264 sps/pps sent, sps=%dB, pps=%dB",
-//                sps.capacity(), pps.capacity()));
+        System.out.println(String.format("flv: h264 sps/pps sent, sps=%dB, pps=%dB",
+                sps.capacity(), pps.capacity()));
         return fvlTag;
     }
 

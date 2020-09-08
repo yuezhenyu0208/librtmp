@@ -20,7 +20,8 @@ public class CommandFactory {
         args.setProperty("app", "live");
         args.setProperty("flashVer", "WIN 15,0,0,239");
 //        args.setProperty("swfUrl", swfUrl);
-        args.setProperty("tcUrl", "rtmp://106.15.73.146/qywslive");
+        //args.setProperty("tcUrl", "rtmp://106.15.73.146/qywslive");
+        args.setProperty("tcUrl", "rtmp://106088.livepush.myqcloud.com/live/");
         args.setProperty("fpad", false);
         args.setProperty("capabilities", 239);
         args.setProperty("audioCodecs", 3575);
@@ -34,14 +35,14 @@ public class CommandFactory {
 
     public static Command createStream () {
         Command createStream = new Command(Amf0CommandName.AMF0_COMMAND_CREATE_STREAM.getCommandName(), 2);
-        createStream.getHeader().setMessageStreamId(0);
+        createStream.getHeader().setMessageStreamId(1111);
         createStream.addData(new AmfNull());
         return createStream;
     }
 
     public static Command publish (int sid, String streamName) {
         Command publish = new Command(Amf0CommandName.AMF0_COMMAND_PUBLISH.getCommandName(), 3, ChunkStreamInfo.RTMP_CID_OVER_STREAM);
-        publish.getHeader().setMessageStreamId(sid);
+        publish.getHeader().setMessageStreamId(1111);
         publish.addData(new AmfNull());
         publish.addData(streamName);
         publish.addData("live");
