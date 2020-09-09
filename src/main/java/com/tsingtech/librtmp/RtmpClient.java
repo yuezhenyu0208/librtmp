@@ -112,7 +112,8 @@ public final class RtmpClient {
 
     public static void main(String[] args) throws Exception {
         try {
-            RtmpClient rtmpClient = Builder.createInstance().setHost("push.kakahui.net").setPort(1935).setApp("live111").setStreamName("1111?txSecret=fde333dae2ccb2430716d6310252fb31&txTime=5F9C0077").build();
+            RtmpClient rtmpClient = Builder.createInstance().setHost("push.kakahui.net").setPort(1935).setApp("live").setStreamName("1111?txSecret=fde333dae2ccb2430716d6310252fb31&txTime=5F9C0077").build();
+            //RtmpClient rtmpClient = Builder.createInstance().setHost("localhost").setPort(9999).setApp("live").setStreamName("1111?txSecret=fde333dae2ccb2430716d6310252fb31&txTime=5F9C0077").build();
             while (!rtmpClient.channelFuture.channel().isActive()){
 
             }
@@ -121,12 +122,12 @@ public final class RtmpClient {
             //rtmpClient.channelFuture.channel().writeAndFlush("sg.getBody()");
             rtmpClient.publish3(msg);
 
-            while (true){
+            /*while (true){
                 Thread.sleep(1000L);
                 System.out.println("Publish.Start:"+rtmpClient.channelFuture.channel().isRegistered());
                 System.out.println("Publish.Start:"+rtmpClient.channelFuture.channel().isOpen());
                 System.out.println("Publish.Start:"+rtmpClient.channelFuture.channel().isActive());
-            }
+            }*/
             //RtmpClient rtmpClient = Builder.createInstance().setHost("push.kakahui.net").setPort(1935).setApp("live111").setStreamName("1111").build();
             /*Thread.sleep(10000);
             System.out.println("rtmpClient 初始化结果"+rtmpClient.inited);
@@ -147,7 +148,8 @@ public final class RtmpClient {
 
     private static DataPacket buildDataPacket(){
         DataPacket msg = new VideoPacket();
-        File file = new File("/home/yue/Videos/test.webm");
+        //File file = new File("/home/yue/Videos/test.webm");
+        File file = new File("/home/yue/Videos/test2.webm");
         //File file = new File("/home/yue/Videos/advert.mp4");
         //File file = new File("/home/yue/Videos/dump.webm");
         byte[] by = FileUtil.readBytes(file);
@@ -196,6 +198,10 @@ public final class RtmpClient {
     public void publish3 (DataPacket msg) throws Exception {
         System.out.println("推流时链接状态"+ channelFuture.channel().isOpen());
         this.srsFlvMuxer.write(channelFuture.channel(), msg);
+    }
+
+    public boolean channelIsOpen(){
+        return channelFuture.channel().isOpen();
     }
 
     @Data

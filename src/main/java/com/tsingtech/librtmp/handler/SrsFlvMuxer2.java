@@ -91,8 +91,23 @@ public class SrsFlvMuxer2 {
         return video;
     }
 
+    // 正常
+    private ByteBuf muxSPSPPSFlvTag(ByteBuf sps, ByteBuf pps, int dts, int pts) {
+        ByteBuf fvlTag = Unpooled.directBuffer(5 + sps.readableBytes() + pps.readableBytes() + 11);
+
+        muxFlvHeader(fvlTag, SrsFlvMuxer.SrsCodecVideoAVCFrame.KeyFrame, SrsFlvMuxer.SrsCodecVideoAVCType.SequenceHeader, dts, pts);
+
+        // h.264 raw data.
+        muxSequenceHeader(fvlTag, sps, pps);
+        System.out.println(String.format("flv: h264 sps/pps sent, sps=%dB, pps=%dB",
+                sps.capacity(), pps.capacity()));
+        return fvlTag;
+    }
+
+    // 有问题
     private ByteBuf muxIpbFlvTag (ByteBuf bb, int type, int dts, int pts) {
         ByteBuf fvlTag = Unpooled.directBuffer(9 + bb.readableBytes());
+        //muxFlvHeader(fvlTag, type, SrsFlvMuxer.SrsCodecVideoAVCType.NALU, dts, pts);
         muxFlvHeader(fvlTag, type, SrsFlvMuxer.SrsCodecVideoAVCType.NALU, dts, pts);
         muxNaluHeader(fvlTag, bb.readableBytes());
         fvlTag.writeBytes(bb);
@@ -120,6 +135,7 @@ public class SrsFlvMuxer2 {
         // Frame Type, Type of video frame.
         // CodecID, Codec Identifier.
         // set the rtmp header
+        System.out.println("frame_type:"+frame_type);
         fvlTag.writeByte(((frame_type << 4) | SrsFlvMuxer.SrsCodecVideo.AVC));
 
         // AVCPacketType
@@ -133,18 +149,6 @@ public class SrsFlvMuxer2 {
         fvlTag.writeByte(cts >> 16);
         fvlTag.writeByte(cts >> 8);
         fvlTag.writeByte(cts);
-    }
-
-    private ByteBuf muxSPSPPSFlvTag(ByteBuf sps, ByteBuf pps, int dts, int pts) {
-        ByteBuf fvlTag = Unpooled.directBuffer(5 + sps.readableBytes() + pps.readableBytes() + 11);
-
-        muxFlvHeader(fvlTag, SrsFlvMuxer.SrsCodecVideoAVCFrame.KeyFrame, SrsFlvMuxer.SrsCodecVideoAVCType.SequenceHeader, dts, pts);
-
-        // h.264 raw data.
-        muxSequenceHeader(fvlTag, sps, pps);
-        System.out.println(String.format("flv: h264 sps/pps sent, sps=%dB, pps=%dB",
-                sps.capacity(), pps.capacity()));
-        return fvlTag;
     }
 
     private void muxSequenceHeader(ByteBuf sequenceHeader, ByteBuf sps, ByteBuf pps) {

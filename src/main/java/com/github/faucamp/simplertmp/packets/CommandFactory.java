@@ -21,7 +21,7 @@ public class CommandFactory {
         args.setProperty("flashVer", "WIN 15,0,0,239");
 //        args.setProperty("swfUrl", swfUrl);
         //args.setProperty("tcUrl", "rtmp://106.15.73.146/qywslive");
-        args.setProperty("tcUrl", "rtmp://106088.livepush.myqcloud.com/live/");
+        args.setProperty("tcUrl", "rtmp://push.kakahui.net/live/");
         args.setProperty("fpad", false);
         args.setProperty("capabilities", 239);
         args.setProperty("audioCodecs", 3575);
